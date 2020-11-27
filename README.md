@@ -15,13 +15,13 @@ Maven:
     <dependency>
         <groupId>io.quiche4j</groupId>
         <artifactId>quiche4j-core</artifactId>
-        <version>0.2.5</version>
+        <version>0.2.6</version>
     </dependency>
     <dependency>
         <groupId>io.quiche4j</groupId>
         <artifactId>quiche4j-jni</artifactId>
         <classifier>linux_x64_86</classifier>
-        <version>0.2.5</version>
+        <version>0.2.6</version>
     </dependency>
 </dependencies>
 ```
@@ -43,7 +43,7 @@ Note that `quiche4j-jni` contains native library and should be installed with pr
         <groupId>io.quiche4j</groupId>
         <artifactId>quiche4j-jni</artifactId>
         <classifier>${os.detected.classifier}</classifier>
-        <version>0.2.5</version>
+        <version>0.2.6</version>
     </dependency>
 </dependencies>
 ```
@@ -197,7 +197,7 @@ The `streamRecv` method can then be used to retrieve the application data from t
 
 ```java
 if(conn.isEstablished()) {
-    final byte[] buf = new byte[1350]; 
+    final byte[] buf = new byte[1350];
     for(long streamId: conn.readable()) {
         // stream <streamId> is readable, read until there's no more data
         while(true) {
@@ -270,7 +270,7 @@ h3Conn.sendBody(streamId, "Hello there!".getBytes(), true);
 
 After receiving QUIC packets, HTTP/3 data is processed using the connection's `poll` method.
 
-An HTTP/3 server uses `poll` to read requests and responds to them, an HTTP/3 client uses `poll` to read responses. `poll` method accepts object that implements `Http3EventListener` interface defining callbacks for different type of events 
+An HTTP/3 server uses `poll` to read requests and responds to them, an HTTP/3 client uses `poll` to read responses. `poll` method accepts object that implements `Http3EventListener` interface defining callbacks for different type of events
 
 ```java
 import io.quiche4j.http3.Http3EventListener;
@@ -331,23 +331,23 @@ $ QUICHE4J_JNI_LOG=trace ./http3-client.sh https://quic.tech:8443
 
 ## Implementation Details
 
-* Modules [Native.java](src/main/java/io/quiche4j/Native.java) and [Http3Native.java](src/main/java/io/quiche4j/http3/Http3Native.java) contains definition of all native calls, structurally close to `quiche`'s [`src/ffi.rs`](https://github.com/cloudflare/quiche/blob/master/src/ffi.rs) and [`src/h3/ffi.rs`](https://github.com/cloudflare/quiche/blob/master/src/h3/ffi.rs) respectively.
+-   Modules [Native.java](src/main/java/io/quiche4j/Native.java) and [Http3Native.java](src/main/java/io/quiche4j/http3/Http3Native.java) contains definition of all native calls, structurally close to `quiche`'s [`src/ffi.rs`](https://github.com/cloudflare/quiche/blob/master/src/ffi.rs) and [`src/h3/ffi.rs`](https://github.com/cloudflare/quiche/blob/master/src/h3/ffi.rs) respectively.
 
-* JNI calls are implmeneted in Rust (see [quiche4j-jni](quiche4j-jni/) for more details) using [`rust-jni`](https://docs.rs/jni/0.17.0/jni/) library. The goal was to stick to primitive types as much as possible and avoid Java objects manipulations in native code. There are still a few exceptions from this rule, e.g. operations with connection `Stats`, management of `Http3Header` lists, etc.
+-   JNI calls are implmeneted in Rust (see [quiche4j-jni](quiche4j-jni/) for more details) using [`rust-jni`](https://docs.rs/jni/0.17.0/jni/) library. The goal was to stick to primitive types as much as possible and avoid Java objects manipulations in native code. There are still a few exceptions from this rule, e.g. operations with connection `Stats`, management of `Http3Header` lists, etc.
 
-* Proxy Java objects maintain a handle (pointer) to the corresponding Rust struct to maximise compatability with all `quiche` features. A single instance of a `Cleaner` is statically defined in `io.quiche4j.Native` class and is used to register all deallocation callback (conventionally called `free` for each class that maintains a native pointer).
+-   Proxy Java objects maintain a handle (pointer) to the corresponding Rust struct to maximise compatability with all `quiche` features. A single instance of a `Cleaner` is statically defined in `io.quiche4j.Native` class and is used to register all deallocation callback (conventionally called `free` for each class that maintains a native pointer).
 
 ## Contribute
 
-* Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug (also, check out "TODO" section of this document).
-* Fork the repository on Github & fork master to `feature-*` branch to start making your changes.
-* Write a test which shows that the bug was fixed or that the feature works as expected.
+-   Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug (also, check out "TODO" section of this document).
+-   Fork the repository on Github & fork master to `feature-*` branch to start making your changes.
+-   Write a test which shows that the bug was fixed or that the feature works as expected.
 
 or simply...
 
-* Use it.
-* Enjoy it.
-* Spread the word.
+-   Use it.
+-   Enjoy it.
+-   Spread the word.
 
 ## TODO
 
@@ -355,10 +355,10 @@ There are still a few `xxx` comments in the code. Both for Java and for Rust. Pl
 
 Other ideas to work on:
 
-- [ ] Propagate Rust panics into Java exceptions (when necessary)
-- [ ] Setup integration testing suite against different QUIC implementations out there
-- [ ] Qlog support
-- [ ] Experiment with in-memory serialization (Arrow?) to deal with (presumably) high overhead of manipulating objects in native code
+-   [ ] Propagate Rust panics into Java exceptions (when necessary)
+-   [ ] Setup integration testing suite against different QUIC implementations out there
+-   [ ] Qlog support
+-   [ ] Experiment with in-memory serialization (Arrow?) to deal with (presumably) high overhead of manipulating objects in native code
 
 ## Copyright
 
