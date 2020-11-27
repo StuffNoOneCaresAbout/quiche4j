@@ -876,6 +876,7 @@ fn call_on_headers(
     let holder = env.new_object(ARRAY_LIST_CLASS, "()V", &[])?;
     let java_headers = JList::from_env(&env, holder)?;
     headers.iter().for_each(|header| {
+        use quiche::h3::NameValue;
         let elem = env
             .new_object(
                 HTTP3_HEADER_CLASS,
@@ -942,6 +943,14 @@ pub extern "system" fn Java_io_quiche4j_http3_Http3Native_quiche_1h3_1conn_1poll
             stream_id as jlong
         }
         Ok((stream_id, h3::Event::Finished)) => {
+            call_on_finished(&env, listener, stream_id).unwrap();
+            stream_id as jlong
+        }
+        Ok((stream_id, h3::Event::Datagram)) => {
+            call_on_data(&env, listener, stream_id).unwrap();
+            stream_id as jlong
+        }
+        Ok((stream_id, h3::Event::GoAway)) => {
             call_on_finished(&env, listener, stream_id).unwrap();
             stream_id as jlong
         }
