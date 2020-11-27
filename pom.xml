@@ -17,7 +17,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/kachayev/quiche4j</url>
+      <url>https://maven.pkg.github.com/StuffNoOneCaresAbout/quiche4j</url>
     </repository>
   </distributionManagement>
   <modules>
